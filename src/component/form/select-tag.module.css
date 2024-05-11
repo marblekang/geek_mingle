@@ -1,0 +1,20 @@
+.single-button {
+  height: 16px;
+  margin-right: 10px;
+  margin-bottom: 12px;
+  border: 1px solid #f2f4f7;
+  background: #f2f4f7;
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 400;
+  color: #333;
+}
+
+.active {
+  border: 1px solid #36f;
+  color: #36f;
+  background-color: #fff;
+  font-weight: 600;
+}
