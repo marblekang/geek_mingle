@@ -5,13 +5,12 @@ import { useSession } from "next-auth/react";
 
 const Nav = () => {
   const { data: session } = useSession();
+
   return (
     <div className={styles.nav}>
       <Link href={"/"}>Home</Link>
-      <Link href={session ? "/mypage" : "/login"}>
-        {session ? "My Page" : "Login"}
-      </Link>
-      <Link href="/form">Form</Link>
+      <Link href={"/auth"}>{session ? "My Page" : "Login"}</Link>
+      <Link href="/form/job">Form</Link>
     </div>
   );
 };

@@ -14,9 +14,12 @@ datasource db {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
-  email     String  @unique
-  name      String
-  followers Int     @default(0)
-  isActive  Boolean @default(true)
+  id        Int      @id @default(autoincrement())
+  username  String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  techStack String @default("")
+  jobs      String @default("")
 }
+
+

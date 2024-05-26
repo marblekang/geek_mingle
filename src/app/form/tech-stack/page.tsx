@@ -34,7 +34,15 @@ const TeckStackForm = () => {
     "Docker",
     "Kubernetes",
   ];
-  return <Form keywords={techStackKeywords} title="사용(관심) 기술 스택" />;
+  return (
+    <Form
+      keywords={techStackKeywords}
+      title="사용(관심) 기술 스택"
+      prevPath="/form/job"
+      type="techStack"
+      isLast
+    />
+  );
 };
 
 export default TeckStackForm;

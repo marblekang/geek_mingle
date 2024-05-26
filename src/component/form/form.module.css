@@ -26,3 +26,10 @@
   border-radius: 10px;
   align-self: flex-end;
 }
+
+.push-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}

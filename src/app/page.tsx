@@ -1,11 +1,11 @@
-import RootLayout from "./layout";
-import Link from "next/link";
-import styles from "./page.module.css";
-import PageWithAuth from "@/component/submit/SessionState";
+import HomeFrame from "@/component/home/Home";
+import AuthenticationCheck from "@/component/AuthenticationCheck";
+
 export default function Home() {
   return (
-    <RootLayout>
-      <span>home</span>
-    </RootLayout>
+    <>
+      <AuthenticationCheck />
+      <HomeFrame />
+    </>
   );
 }

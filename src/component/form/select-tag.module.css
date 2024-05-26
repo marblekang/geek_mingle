@@ -13,8 +13,6 @@
 }
 
 .active {
-  border: 1px solid #36f;
-  color: #36f;
-  background-color: #fff;
-  font-weight: 600;
+  color: #fff;
+  background-color: #36f;
 }

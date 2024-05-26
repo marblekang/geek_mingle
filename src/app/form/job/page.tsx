@@ -12,7 +12,14 @@ const JobForm = () => {
     "안드로이드 개발자",
     "iOS 개발자",
   ];
-  return <Form keywords={jobKeywords} title="현재(관심) 직무" />;
+  return (
+    <Form
+      keywords={jobKeywords}
+      title="현재(관심) 직무"
+      nextPath="/form/tech-stack"
+      type="job"
+    />
+  );
 };
 
 export default JobForm;
