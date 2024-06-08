@@ -1,12 +1,14 @@
 import { ReactNode } from "react";
 import NavBottom from "@/component/nav-bottom/NavBottom";
+import styles from "./page.module.css";
 interface AuthorizedLayoutProps {
   children: ReactNode;
 }
+
 const AuthorizedLayout = ({ children }: AuthorizedLayoutProps) => {
   return (
-    <div>
-      <div>{children}</div>
+    <div className={styles["authorized-container"]}>
+      {children}
       <NavBottom />
     </div>
   );

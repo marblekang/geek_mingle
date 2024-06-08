@@ -1,0 +1,21 @@
+.user-card-container {
+  padding: 1rem;
+  border: 1px solid gray;
+  border-radius: 20px;
+}
+
+.user-info-area {
+  display: flex;
+}
+
+.user-avatar-area {
+  padding: 0.5rem;
+  justify-content: flex-start;
+}
+
+.user-essential-info-area {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}

@@ -2,7 +2,7 @@
 import { useFormStore } from "@/ilb/store/useFormStore";
 import { FormTypeLabel } from "@/ilb/types/enums";
 import { FormType } from "@/ilb/types/form";
-import { handleSubmit } from "@/util/crud";
+import { createUser } from "@/util/crud";
 import { MouseEvent, useCallback, useEffect, useState } from "react";
 const useSelectTag = ({ type }: { type: FormType }) => {
   const [selectedList, setSelectedList] = useState<string[]>([]);
@@ -59,7 +59,7 @@ const useSelectTag = ({ type }: { type: FormType }) => {
       const techStack = getSessionStorage({ name: FormTypeLabel.teckStack });
       const jobs = getSessionStorage({ name: FormTypeLabel.job });
       if (techStack && jobs) {
-        handleSubmit({
+        createUser({
           email: "kang1234@gmail.com",
           username: "kang",
           techStack: JSON.stringify(techStack),

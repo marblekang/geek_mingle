@@ -128,3 +128,7 @@ table {
 div {
   box-sizing: border-box;
 }
+
+input {
+  outline: none;
+}
