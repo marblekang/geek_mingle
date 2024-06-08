@@ -1,0 +1,9 @@
+.main-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.infinite-scroll-target {
+  height: 50px;
+}

@@ -1,0 +1,35 @@
+.form-container {
+  padding: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.common-container {
+  display: flex;
+  padding: 1rem;
+  flex-direction: column;
+  width: fit-content;
+}
+
+.common-button {
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  width: fit-content;
+  color: #fff;
+  background-color: #4285f4;
+  border: none;
+  border-radius: 10px;
+  align-self: flex-end;
+}
+
+.push-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}

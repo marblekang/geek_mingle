@@ -1,0 +1,12 @@
+.nav {
+  height: 50px;
+  position: fixed;
+  bottom: 0;
+  background: #000;
+  padding: 0.5rem 1rem;
+  max-width: calc(475px - 2rem);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
