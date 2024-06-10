@@ -2,10 +2,8 @@
 import styles from "./form.module.css";
 import SelectTag from "@/component/form/select-tag";
 import useSelectTag from "@/component/form/useSelectTag";
-import { FormTypeLabel } from "@/ilb/types/enums";
 import { FormType } from "@/ilb/types/form";
 import Link from "next/link";
-import { useEffect } from "react";
 
 interface Props {
   title: string;

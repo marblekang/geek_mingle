@@ -5,10 +5,10 @@ import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
-  const { email, password, name } = await req.json();
-
+  const { email, password, name, age } = await req.json();
+  console.log(age, "age");
   // 유효성 검사
-  if (!email || !password || !name) {
+  if (!email || !password || !name || !age) {
     return NextResponse.json(
       { message: "Missing required fields" },
       { status: 400 }
@@ -37,14 +37,12 @@ export async function POST(req: NextRequest) {
         email,
         password: hashedPassword,
         name,
+        age,
       },
     });
 
     return NextResponse.json({ user }, { status: 201 });
   } catch (error: any) {
-    return NextResponse.json(
-      { message: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ message: `${error}` }, { status: 500 });
   }
 }

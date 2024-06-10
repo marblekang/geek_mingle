@@ -871,6 +871,11 @@ add@^2.0.6:
   resolved "https://registry.npmjs.org/add/-/add-2.0.6.tgz"
   integrity sha512-j5QzrmsokwWWp6kUcJQySpbG+xfOBqqKnup3OIk1pz+kB/80SLorZ9V8zHFLO92Lcd+hbvq8bT+zOGoPkmBV0Q==
 
+age-picker@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/age-picker/-/age-picker-1.2.0.tgz#c931df13102e3e6880143b5ac8e4729d55f638bf"
+  integrity sha512-kKL/HtR+4pR1EaEC4dIdUyTQ95t0G3BnHeozTfXjx3h+jXeCkGteIbrLzpnUi85QwwVWlR5IWBq2VufZouGzUw==
+
 agent-base@6:
   version "6.0.2"
   resolved "https://registry.npmjs.org/agent-base/-/agent-base-6.0.2.tgz"

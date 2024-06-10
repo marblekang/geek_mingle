@@ -1,6 +1,6 @@
 import Form from "@/component/form/form";
 
-const TeckStackForm = () => {
+const TechStackForm = () => {
   const techStackKeywords: string[] = [
     "React",
     "Vue.js",
@@ -34,6 +34,7 @@ const TeckStackForm = () => {
     "Docker",
     "Kubernetes",
   ];
+
   return (
     <Form
       keywords={techStackKeywords}
@@ -45,4 +46,4 @@ const TeckStackForm = () => {
   );
 };
 
-export default TeckStackForm;
+export default TechStackForm;
