@@ -18,6 +18,7 @@
     "@tanstack/react-query-devtools": "^5.40.0",
     "@tanstack/react-query-next-experimental": "^5.40.0",
     "add": "^2.0.6",
+    "age-picker": "^1.2.0",
     "axios": "^1.7.1",
     "bcrypt": "^5.1.1",
     "dayjs": "^1.11.11",

@@ -3,37 +3,36 @@ import { useReducer, FormEvent, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./sign-in.module.css";
 
-interface State {
-  email: string;
-  password: string;
-  error: string | null;
-}
-
-type Action =
-  | { type: "SET_EMAIL"; payload: string }
-  | { type: "SET_PASSWORD"; payload: string }
-  | { type: "SET_ERROR"; payload: string | null };
-
-const initialState: State = {
-  email: "",
-  password: "",
-  error: null,
-};
-
-const reducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case "SET_EMAIL":
-      return { ...state, email: action.payload };
-    case "SET_PASSWORD":
-      return { ...state, password: action.payload };
-    case "SET_ERROR":
-      return { ...state, error: action.payload };
-    default:
-      return state;
-  }
-};
-
 const Login = () => {
+  interface State {
+    email: string;
+    password: string;
+    error: string | null;
+  }
+
+  type Action =
+    | { type: "SET_EMAIL"; payload: string }
+    | { type: "SET_PASSWORD"; payload: string }
+    | { type: "SET_ERROR"; payload: string | null };
+
+  const initialState: State = {
+    email: "",
+    password: "",
+    error: null,
+  };
+
+  const reducer = (state: State, action: Action): State => {
+    switch (action.type) {
+      case "SET_EMAIL":
+        return { ...state, email: action.payload };
+      case "SET_PASSWORD":
+        return { ...state, password: action.payload };
+      case "SET_ERROR":
+        return { ...state, error: action.payload };
+      default:
+        return state;
+    }
+  };
   const [state, dispatch] = useReducer(reducer, initialState);
   const router = useRouter();
 

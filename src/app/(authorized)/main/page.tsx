@@ -2,8 +2,7 @@
 import UserCard from "@/component/users/user-card/UserCard";
 import React, { useCallback, useEffect, useState } from "react";
 import Logo from "@/assets/kakao_logo.png";
-import { faker } from "@faker-js/faker";
-import { createUser, getUser } from "@/util/users/crud";
+import { getUser } from "@/util/users/crud";
 import { useInView } from "react-intersection-observer";
 import { useQuery } from "@tanstack/react-query";
 import styles from "./main.module.css";

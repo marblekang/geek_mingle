@@ -1,10 +1,13 @@
 "use client";
-import { useFormStore } from "@/ilb/store/useFormStore";
+
+import { useUserInfoStore } from "@/ilb/store/useUserInfoStore";
 import { FormTypeLabel } from "@/ilb/types/enums";
 import { FormType } from "@/ilb/types/form";
-import { createUser } from "@/util/crud";
+import { updateUser } from "@/util/users/crud";
+
 import { MouseEvent, useCallback, useEffect, useState } from "react";
 const useSelectTag = ({ type }: { type: FormType }) => {
+  const { onChangeUserInfo, userInfo } = useUserInfoStore();
   const [selectedList, setSelectedList] = useState<string[]>([]);
   const onClickTag = useCallback(
     (e: MouseEvent<HTMLDivElement>) => {
@@ -27,9 +30,11 @@ const useSelectTag = ({ type }: { type: FormType }) => {
     [selectedList]
   );
 
+  console.log(selectedList, "selectedList");
+
   const typeConverter: { [key in FormType]: FormTypeLabel } = {
     job: FormTypeLabel.job,
-    techStack: FormTypeLabel.teckStack,
+    techStack: FormTypeLabel.techStack,
   };
   interface CommonSessionStorageParams {
     name: string;
@@ -44,6 +49,7 @@ const useSelectTag = ({ type }: { type: FormType }) => {
     }
     sessionStorage.setItem(name, JSON.stringify(data));
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const getSessionStorage = ({ name }: CommonSessionStorageParams) => {
     const item = sessionStorage.getItem(name);
 
@@ -55,30 +61,20 @@ const useSelectTag = ({ type }: { type: FormType }) => {
       /* DB에 저장. 
     Post 요청
     */
-      console.log("isLast");
-      const techStack = getSessionStorage({ name: FormTypeLabel.teckStack });
+
+      const techStack = getSessionStorage({ name: FormTypeLabel.techStack });
       const jobs = getSessionStorage({ name: FormTypeLabel.job });
-      if (techStack && jobs) {
-        createUser({
-          email: "kang1234@gmail.com",
-          username: "kang",
-          techStack: JSON.stringify(techStack),
-          jobs: JSON.stringify(jobs),
-        });
-      }
+      const { email } = userInfo;
+      updateUser({ email, job: jobs, techStack });
+      onChangeUserInfo((prev) => ({ ...prev, techStack, job: jobs }));
     }
     setSessionStorage({ name: typeConverter[type], data: selectedList });
   };
   useEffect(() => {
     const data = getSessionStorage({ name: typeConverter[type] });
     setSelectedList(data ?? []);
-  }, []);
-  // useEffect(() => {
-  //   console.log(globalSelectedList, "globalSElectedLsit");
-  // }, [globalSelectedList]);
-  // useEffect(() => {
-  //   setGlobalSelectedList(selectedList);
-  // }, [selectedList, setGlobalSelectedList]);
+  }, [type]);
+
   return {
     onClickTag,
     isIncluded,
