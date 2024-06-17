@@ -1,12 +1,13 @@
+import { INITIAL_USERINFO } from "@/util/initialState";
 import { create } from "zustand";
 
 interface UserInfo {
   email: string;
   name: string;
   age: number;
-  techStack: string[];
-  job: string[];
-  intro: string;
+  techStack?: string[];
+  job?: string[];
+  intro?: string;
 }
 
 interface UserInfoStoreProps {
@@ -15,7 +16,7 @@ interface UserInfoStoreProps {
 }
 
 export const useUserInfoStore = create<UserInfoStoreProps>((set) => ({
-  userInfo: { email: "", name: "", age: 0, techStack: [], job: [], intro: "" },
+  userInfo: INITIAL_USERINFO,
   onChangeUserInfo: (update) => {
     set((state) => ({ userInfo: update(state.userInfo) }));
   },

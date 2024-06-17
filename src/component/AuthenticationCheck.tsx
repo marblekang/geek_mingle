@@ -1,21 +1,25 @@
 "use client";
-import { useSession } from "next-auth/react";
+import {} from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
+import { useAuthToken } from "./customHooks/useAuthToken";
+import { useUserInfoStore } from "@/ilb/store/useUserInfoStore";
 
 const AuthenticationCheck = () => {
-  const { status } = useSession();
+  const { token } = useAuthToken();
+  const { userInfo } = useUserInfoStore();
+  console.log(userInfo, "userInfo");
   const router = useRouter();
   useEffect(() => {
-    if (status === "authenticated") {
+    if (token) {
       router.replace("/main");
       return;
     }
-    if (status === "unauthenticated") {
+    if (!token) {
       router.replace("/");
       return;
     }
-  }, [status, router]);
+  }, [token, router]);
 
   return null;
 };

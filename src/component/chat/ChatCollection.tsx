@@ -4,6 +4,9 @@ import { collection, onSnapshot, query, orderBy } from "@firebase/firestore";
 import db from "@/fire-config";
 import styles from "./chat.module.css";
 import dayjs from "dayjs";
+import axios from "axios";
+import { useUserInfoStore } from "@/ilb/store/useUserInfoStore";
+import { useAuthToken } from "../customHooks/useAuthToken";
 /**
  * @description
  * 채팅 목록 컴포넌트
@@ -19,6 +22,7 @@ const ChatCollection = () => {
   // 채팅 목록 데이터
   const [chatData, setChatData] = useState<ChatInfo[]>([]);
   const messageRef = useRef<HTMLDivElement | null>(null);
+  const { removeToken } = useAuthToken();
   //
   /**
    * @description
@@ -27,9 +31,23 @@ const ChatCollection = () => {
    * @param cb setState로 data를 설정해주기위한 함수 인자
    * @return unsubscribe 실시간 파이어베이스 연결 함수
    */
+  const { userInfo } = useUserInfoStore();
+  const getRoomIds = async () => {
+    try {
+      const response = await axios.get("/api/room/chat", {
+        params: { userEmail: userInfo.email },
+      });
+      return response.data;
+    } catch (e) {
+      console.log(e);
+      removeToken();
+      return [];
+    }
+  };
 
   function getChatList(cb: (data: ChatInfo[]) => void) {
     const q = query(collection(db, "chat"), orderBy("createdAt", "asc"));
+    console.log(q, "qqqqqqqqqqqqqqqqqqqqqq");
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const responseData: ChatInfo[] = querySnapshot.docs.map((doc) => ({
         ...(doc.data() as ChatInfo),

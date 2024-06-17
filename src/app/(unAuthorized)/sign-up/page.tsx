@@ -86,7 +86,6 @@ const Register = () => {
         dispatch({ type: "SET_ERROR", payload: data.message });
       }
     } catch (error) {
-      console.log(error, "error");
       dispatch({ type: "SET_ERROR", payload: "An unexpected error occurred" });
     }
   };

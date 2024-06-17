@@ -57,18 +57,34 @@ export const updateUser = async ({
   }
 };
 
-export const getUser = async ({
+export const getUserList = async ({
   limit,
   page,
+  loggedInEmail,
 }: {
   limit: number;
   page: number;
+  loggedInEmail: string;
 }) => {
+  console.log(loggedInEmail, "loggedInEmail");
   try {
-    const response = await axios.get(`/api/users?limit=${limit}&page=${page}`);
+    const response = await axios.get(`/api/users`, {
+      params: { page, limit },
+      headers: { "x-logged-in-email": loggedInEmail },
+    });
     return response.data;
   } catch (error) {
     console.error("Error:", error);
     return [];
+  }
+};
+
+export const getUser = async ({ email }: { email: string }) => {
+  try {
+    const response = await axios.get(`/api/users?email=${email}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return null;
   }
 };

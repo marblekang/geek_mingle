@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export async function POST(req: NextRequest) {
   const { email, password, name, age } = await req.json();
-  console.log(age, "age");
+
   // 유효성 검사
   if (!email || !password || !name || !age) {
     return NextResponse.json(

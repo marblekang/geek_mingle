@@ -3,6 +3,7 @@
 import { useUserInfoStore } from "@/ilb/store/useUserInfoStore";
 import { FormTypeLabel } from "@/ilb/types/enums";
 import { FormType } from "@/ilb/types/form";
+import { INITIAL_USERINFO } from "@/util/initialState";
 import { updateUser } from "@/util/users/crud";
 
 import { MouseEvent, useCallback, useEffect, useState } from "react";
@@ -66,14 +67,14 @@ const useSelectTag = ({ type }: { type: FormType }) => {
       const jobs = getSessionStorage({ name: FormTypeLabel.job });
       const { email } = userInfo;
       updateUser({ email, job: jobs, techStack });
-      onChangeUserInfo((prev) => ({ ...prev, techStack, job: jobs }));
+      onChangeUserInfo(() => ({ ...INITIAL_USERINFO }));
     }
     setSessionStorage({ name: typeConverter[type], data: selectedList });
   };
   useEffect(() => {
     const data = getSessionStorage({ name: typeConverter[type] });
     setSelectedList(data ?? []);
-  }, [type]);
+  }, [type, getSessionStorage, typeConverter]);
 
   return {
     onClickTag,

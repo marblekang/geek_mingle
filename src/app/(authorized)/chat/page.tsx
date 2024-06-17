@@ -2,6 +2,7 @@ import ChatCollection from "@/component/chat/ChatCollection";
 import ChatInput from "@/component/chat/ChatInput";
 import styles from "./chat.module.css";
 import { Fragment } from "react";
+import axios from "axios";
 interface Chat {
   id: string;
   text: string;
