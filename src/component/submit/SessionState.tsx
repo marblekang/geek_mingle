@@ -1,18 +1,16 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { ReactElement } from "react";
+import { useAuthToken } from "../customHooks/useAuthToken";
 
 interface Props {
   children: ReactElement;
 }
 const PageWithAuth = ({ children }: Props) => {
-  const { data: session, status } = useSession();
+  const { token } = useAuthToken();
   const router = useRouter();
-  if (status === "loading") {
-    return <div>loading...</div>;
-  } else if (session) {
+  if (token) {
     return <>{children}</>;
   } else {
     router.push("/login");

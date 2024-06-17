@@ -2,8 +2,12 @@
 import { useReducer, FormEvent, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./sign-in.module.css";
+import { useAuthToken } from "@/component/customHooks/useAuthToken";
+import { useUserInfoStore } from "@/ilb/store/useUserInfoStore";
+import { getUser } from "@/util/users/crud";
 
 const Login = () => {
+  const { onChangeUserInfo } = useUserInfoStore();
   interface State {
     email: string;
     password: string;
@@ -35,7 +39,15 @@ const Login = () => {
   };
   const [state, dispatch] = useReducer(reducer, initialState);
   const router = useRouter();
-
+  const { setToken } = useAuthToken();
+  const fetchAuthentificatedUser = async () => {
+    const user = await getUser({ email: state.email });
+    if (user) {
+      const { age, name, email } = user;
+      console.log(user, "user");
+      onChangeUserInfo((prev) => ({ age, name, email }));
+    }
+  };
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     dispatch({ type: "SET_ERROR", payload: null });
@@ -51,9 +63,12 @@ const Login = () => {
 
       if (res.status === 200) {
         const data = await res.json();
-        localStorage.setItem("TOKEN", data.token);
+        fetchAuthentificatedUser();
+
+        setToken(data.token ?? "");
+
         /* login후 mypage로 이동 */
-        router.push("/dashboard"); // 로그인 후 대시보드 페이지로 이동
+        router.push("/main"); // 로그인 후 대시보드 페이지로 이동
       } else {
         const data = await res.json();
         dispatch({ type: "SET_ERROR", payload: data.message });

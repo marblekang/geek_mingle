@@ -1,17 +1,17 @@
 "use client";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useAuthToken } from "../customHooks/useAuthToken";
 
 const HomeNav = () => {
-  const { data: session, status } = useSession();
+  const { token } = useAuthToken();
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "authenticated") {
+    if (token) {
       router.replace("/main");
     }
-  }, [status, router]);
+  }, [token, router]);
 
   // if (status === "loading") {
   //   return <>loading...</>; // Or a loading indicator

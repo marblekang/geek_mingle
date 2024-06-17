@@ -4,14 +4,38 @@ const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
   try {
+    const email = req.nextUrl.searchParams.get("email");
     const page = parseInt(req.nextUrl.searchParams.get("page") || "1");
     const limit = parseInt(req.nextUrl.searchParams.get("limit") || "10");
-    const users = await prisma.user.findMany({
-      skip: (page - 1) * limit,
-      take: limit,
-    });
 
-    return NextResponse.json(users, { status: 200 });
+    // 헤더에서 로그인한 유저의 이메일 추출
+    const loggedInEmail = req.headers.get("x-logged-in-email") ?? "";
+    console.log(req.headers, "headers");
+    if (email) {
+      // 특정 유저 조회
+      const user = await prisma.user.findUnique({
+        where: { email },
+      });
+
+      if (!user) {
+        return new NextResponse("User not found", { status: 404 });
+      }
+
+      return NextResponse.json(user, { status: 200 });
+    } else {
+      // 유저 목록 조회 (페이지네이션) + 특정 이메일 제외
+      const users = await prisma.user.findMany({
+        where: {
+          email: {
+            not: loggedInEmail,
+          },
+        },
+        skip: (page - 1) * limit,
+        take: limit,
+      });
+
+      return NextResponse.json(users, { status: 200 });
+    }
   } catch (error) {
     console.error("Error fetching users:", error);
     return new NextResponse("Internal Server Error!", { status: 500 });
@@ -19,7 +43,6 @@ export async function GET(req: NextRequest) {
     await prisma.$disconnect();
   }
 }
-
 export async function PUT(req: NextRequest) {
   try {
     const { email, job, techStack } = await req.json();

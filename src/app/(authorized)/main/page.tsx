@@ -2,11 +2,12 @@
 import UserCard from "@/component/users/user-card/UserCard";
 import React, { useCallback, useEffect, useState } from "react";
 import Logo from "@/assets/kakao_logo.png";
-import { getUser } from "@/util/users/crud";
+import { getUserList } from "@/util/users/crud";
 import { useInView } from "react-intersection-observer";
 import { useQuery } from "@tanstack/react-query";
 import styles from "./main.module.css";
 import LoadingSpinner from "@/component/common/loading/spinner/LoadingSpinner";
+import { useUserInfoStore } from "@/ilb/store/useUserInfoStore";
 /* 이미지 s3에 저장. */
 
 const Main = () => {
@@ -14,16 +15,22 @@ const Main = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [page, setPage] = useState<number>(1);
   const { inView, ref } = useInView();
-  const fetchUserData = async ({ page }: { page: number }) => {
-    const users = await getUser({ page, limit: LIMIT });
+  const { userInfo } = useUserInfoStore();
+
+  const fetchUserList = async ({ page }: { page: number }) => {
+    const users = await getUserList({
+      page,
+      limit: LIMIT,
+      loggedInEmail: userInfo.email ?? "",
+    });
     return users;
   };
 
   const { data, error, isFetching } = useQuery({
     queryKey: ["users", { page }],
     queryFn: () => {
-      if (page) {
-        return fetchUserData({ page });
+      if (page && userInfo) {
+        return fetchUserList({ page });
       }
     },
   });
@@ -63,6 +70,7 @@ const Main = () => {
                 intro: val.email,
                 techStack: ["test"],
                 jobs: ["test"],
+                email: val.email,
               }}
             >
               <UserCard.InfoArea>
@@ -75,6 +83,7 @@ const Main = () => {
                   <UserCard.Info type="age" />
                   <UserCard.Info type="techStack" />
                   <UserCard.Info type="jobs" />
+                  <UserCard.Preference />
                 </UserCard.EssentialInfoArea>
               </UserCard.InfoArea>
             </UserCard>
