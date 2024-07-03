@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
+import { transformUser } from "@/util/users/transformUser";
+import { ServerUserInfo } from "@/ilb/types/users";
 const prisma = new PrismaClient();
 
 export async function GET(req: NextRequest) {
@@ -10,10 +12,10 @@ export async function GET(req: NextRequest) {
 
     // 헤더에서 로그인한 유저의 이메일 추출
     const loggedInEmail = req.headers.get("x-logged-in-email") ?? "";
-    console.log(req.headers, "headers");
+
     if (email) {
       // 특정 유저 조회
-      const user = await prisma.user.findUnique({
+      const user: ServerUserInfo | null = await prisma.user.findUnique({
         where: { email },
       });
 
@@ -21,20 +23,49 @@ export async function GET(req: NextRequest) {
         return new NextResponse("User not found", { status: 404 });
       }
 
-      return NextResponse.json(user, { status: 200 });
+      return NextResponse.json(transformUser(user), { status: 200 });
     } else {
+      console.log(loggedInEmail, "email");
+      // 로그인한 유저의 likeUserList와 hateUserList 가져오기
+      if (!loggedInEmail) {
+        return new NextResponse("logged-in email is not found", {
+          status: 404,
+        });
+      }
+      const loggedInUser = await prisma.user.findUnique({
+        where: { email: loggedInEmail },
+        select: {
+          likeUserList: true,
+          hateUserList: true,
+        },
+      });
+
+      if (!loggedInUser) {
+        return new NextResponse("Logged-in user not found", { status: 404 });
+      }
+      const { hateUserList, likeUserList } = loggedInUser;
+
+      const likeUserListArray = likeUserList ? JSON.parse(likeUserList) : [];
+      const hateUserListArray = hateUserList ? JSON.parse(hateUserList) : [];
+      const excludeEmails = [
+        ...likeUserListArray,
+        ...hateUserListArray,
+        loggedInEmail,
+      ];
+
+      console.log(excludeEmails, "excludeEmails");
       // 유저 목록 조회 (페이지네이션) + 특정 이메일 제외
       const users = await prisma.user.findMany({
         where: {
           email: {
-            not: loggedInEmail,
+            notIn: excludeEmails,
           },
         },
         skip: (page - 1) * limit,
         take: limit,
       });
 
-      return NextResponse.json(users, { status: 200 });
+      return NextResponse.json(transformUser(users), { status: 200 });
     }
   } catch (error) {
     console.error("Error fetching users:", error);

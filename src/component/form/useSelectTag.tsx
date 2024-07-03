@@ -5,11 +5,12 @@ import { FormTypeLabel } from "@/ilb/types/enums";
 import { FormType } from "@/ilb/types/form";
 import { INITIAL_USERINFO } from "@/util/initialState";
 import { updateUser } from "@/util/users/crud";
+import { MouseEvent, useCallback, useEffect, useState, useMemo } from "react";
 
-import { MouseEvent, useCallback, useEffect, useState } from "react";
 const useSelectTag = ({ type }: { type: FormType }) => {
   const { onChangeUserInfo, userInfo } = useUserInfoStore();
   const [selectedList, setSelectedList] = useState<string[]>([]);
+
   const onClickTag = useCallback(
     (e: MouseEvent<HTMLDivElement>) => {
       if (e.target instanceof HTMLElement && e.target.dataset.name) {
@@ -24,6 +25,7 @@ const useSelectTag = ({ type }: { type: FormType }) => {
     },
     [selectedList]
   );
+
   const isIncluded = useCallback(
     (name: string) => {
       return selectedList.includes(name) ? true : false;
@@ -31,12 +33,14 @@ const useSelectTag = ({ type }: { type: FormType }) => {
     [selectedList]
   );
 
-  console.log(selectedList, "selectedList");
+  const typeConverter = useMemo(
+    () => ({
+      job: FormTypeLabel.job,
+      techStack: FormTypeLabel.techStack,
+    }),
+    []
+  );
 
-  const typeConverter: { [key in FormType]: FormTypeLabel } = {
-    job: FormTypeLabel.job,
-    techStack: FormTypeLabel.techStack,
-  };
   interface CommonSessionStorageParams {
     name: string;
   }
@@ -50,19 +54,17 @@ const useSelectTag = ({ type }: { type: FormType }) => {
     }
     sessionStorage.setItem(name, JSON.stringify(data));
   };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getSessionStorage = ({ name }: CommonSessionStorageParams) => {
-    const item = sessionStorage.getItem(name);
 
-    return item && JSON.parse(item);
-  };
+  const getSessionStorage = useCallback(
+    ({ name }: CommonSessionStorageParams) => {
+      const item = sessionStorage.getItem(name);
+      return item && JSON.parse(item);
+    },
+    []
+  );
 
   const onClickSubmit = (type: FormType, isLast?: true) => {
     if (isLast) {
-      /* DB에 저장. 
-    Post 요청
-    */
-
       const techStack = getSessionStorage({ name: FormTypeLabel.techStack });
       const jobs = getSessionStorage({ name: FormTypeLabel.job });
       const { email } = userInfo;
@@ -70,11 +72,13 @@ const useSelectTag = ({ type }: { type: FormType }) => {
       onChangeUserInfo(() => ({ ...INITIAL_USERINFO }));
     }
     setSessionStorage({ name: typeConverter[type], data: selectedList });
+    setSelectedList([]);
   };
+
   useEffect(() => {
     const data = getSessionStorage({ name: typeConverter[type] });
     setSelectedList(data ?? []);
-  }, [type, getSessionStorage, typeConverter]);
+  }, [type, typeConverter, getSessionStorage]);
 
   return {
     onClickTag,

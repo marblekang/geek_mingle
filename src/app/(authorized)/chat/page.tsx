@@ -3,6 +3,7 @@ import ChatInput from "@/component/chat/ChatInput";
 import styles from "./chat.module.css";
 import { Fragment } from "react";
 import axios from "axios";
+import ChatRooms from "@/component/chat/ChatRooms/ChatRooms";
 interface Chat {
   id: string;
   text: string;
@@ -15,9 +16,7 @@ interface Chat {
 export default async function Chat() {
   return (
     <div className={styles["chat-container"]}>
-      <ChatCollection />
-      {/* 채팅 작성 인풋*/}
-      <ChatInput />
+      <ChatRooms />
     </div>
   );
 }

@@ -1,0 +1,5 @@
+.chat-container {
+  height: calc(100vh - 50px);
+  position: relative;
+  width: 100%;
+}

@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
     const existingRoom = await prisma.room.findFirst({
       where: {
         receiverEmail: senderEmail,
+        senderEmail: receiverEmail,
       },
     });
 
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
       // Update the existing room
       const updatedRoom = await prisma.room.update({
         where: {
-          id: existingRoom.id,
+          id: id,
         },
         data: {
           accepted: true,
@@ -45,6 +46,7 @@ export async function POST(req: NextRequest) {
         receiverEmail: receiver,
         accepted: true,
         createdAt: serverTimestamp(),
+        lastMessage: "",
       });
 
       // Firestore의 방 문서에 메시지 컬렉션 추가
@@ -52,7 +54,7 @@ export async function POST(req: NextRequest) {
         doc(collection(db, `conversations/${existingRoom.id}/messages`)),
         {
           sender: senderEmail,
-          text: "Initial message",
+          text: "",
           createdAt: serverTimestamp(),
         }
       );

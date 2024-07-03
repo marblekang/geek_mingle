@@ -20,6 +20,7 @@ receiver User @relation ("receiver",fields: [receiverEmail],references: [email])
 accepted Boolean @default(false)
 senderEmail String 
 receiverEmail String
+
 }
 
 model User {
@@ -28,11 +29,13 @@ model User {
   password String
   name     String
   createdAt DateTime @default(now())
-  job String? // Optional field
-  techStack String? // Optional field
-  age Int? // Optional field
+  job String @default("")// Optional field
+  techStack String @default("") // Optional field
+  age Int // Optional field
   SendRoom Room[] @relation("sender") // 내가 누굴 선택하면 SendRoom에 추가
   ReceiveRoom Room[] @relation("receiver") // 누가 나를 선택하면 ReceiveRoom에 추가
+  likeUserList String @default("")
+  hateUserList String @default("")
 }
 
 

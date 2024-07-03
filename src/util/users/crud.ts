@@ -88,3 +88,15 @@ export const getUser = async ({ email }: { email: string }) => {
     return null;
   }
 };
+
+export const markUser = async ({
+  senderEmail,
+  receiverEmail,
+  type,
+}: {
+  senderEmail: string;
+  receiverEmail: string;
+  type: "like" | "skip";
+}) => {
+  return axios.put("/api/users/mark", { senderEmail, receiverEmail, type });
+};

@@ -1,40 +1,7 @@
 import Form from "@/component/form/form";
+import { techStackKeywords } from "@/ilb/config/selectTag";
 
 const TechStackForm = () => {
-  const techStackKeywords: string[] = [
-    "React",
-    "Vue.js",
-    "Angular",
-    "JavaScript",
-    "TypeScript",
-    "HTML",
-    "CSS",
-    "SASS/SCSS",
-    "Redux",
-    "Next.js",
-    "Node.js",
-    "Express.js",
-    "Django",
-    "Ruby on Rails",
-    "Spring Boot",
-    "Flask",
-    "Go",
-    "PHP",
-    "Python",
-    "Java",
-    "MySQL",
-    "PostgreSQL",
-    "MongoDB",
-    "Redis",
-    "SQLite",
-    "Oracle",
-    "Microsoft SQL Server",
-    "GraphQL",
-    "REST API",
-    "Docker",
-    "Kubernetes",
-  ];
-
   return (
     <Form
       keywords={techStackKeywords}
