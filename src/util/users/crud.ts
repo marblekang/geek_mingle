@@ -1,3 +1,4 @@
+import { generateSelectionArray } from "@/ilb/config/selectTag";
 import axios from "axios";
 
 // export const createUser = async ({
@@ -40,14 +41,17 @@ export const updateUser = async ({
   techStack,
 }: {
   email: string;
-  job: string;
+  job: string[];
   techStack: string[];
 }): Promise<any> => {
   try {
+    const selectedKeywords = [...job, ...techStack];
+    const preferences = generateSelectionArray(selectedKeywords);
     const response = await axios.put("/api/users", {
       email,
       job,
       techStack,
+      preferences,
     });
 
     return response;

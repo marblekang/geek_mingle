@@ -44,3 +44,11 @@ export const techStackKeywords: string[] = [
 ];
 
 export const allKeywords: string[] = [...jobKeywords, ...techStackKeywords];
+
+export const generateSelectionArray = (
+  selectedKeywords: string[]
+): number[] => {
+  return allKeywords.map((keyword) =>
+    selectedKeywords.includes(keyword) ? 1 : 0
+  );
+};

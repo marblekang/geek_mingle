@@ -36,6 +36,7 @@ model User {
   ReceiveRoom Room[] @relation("receiver") // 누가 나를 선택하면 ReceiveRoom에 추가
   likeUserList String @default("")
   hateUserList String @default("")
+  preferences String @default("")
 }
 
 

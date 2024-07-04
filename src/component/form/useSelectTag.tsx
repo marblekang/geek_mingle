@@ -96,6 +96,7 @@ const useSelectTag = ({ type }: { type: FormType }) => {
     onClickTag,
     isIncluded,
     onClickSubmit,
+    selectedList,
   };
 };
 

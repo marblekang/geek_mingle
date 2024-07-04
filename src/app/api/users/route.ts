@@ -76,7 +76,7 @@ export async function GET(req: NextRequest) {
 }
 export async function PUT(req: NextRequest) {
   try {
-    const { email, job, techStack } = await req.json();
+    const { email, job, techStack, preferences } = await req.json();
 
     if (!email) {
       return new NextResponse("User ID is required!", { status: 400 });
@@ -87,6 +87,7 @@ export async function PUT(req: NextRequest) {
       data: {
         job: JSON.stringify(job),
         techStack: JSON.stringify(techStack),
+        preferences: JSON.stringify(preferences),
       },
     });
 
