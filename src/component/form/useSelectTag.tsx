@@ -62,17 +62,29 @@ const useSelectTag = ({ type }: { type: FormType }) => {
     },
     []
   );
+  const onResetKeywords = () => {
+    const typeList = [FormTypeLabel.job, FormTypeLabel.techStack];
+    typeList.forEach((type) => {
+      setSessionStorage({ name: type, data: [] });
+    });
+  };
 
   const onClickSubmit = (type: FormType, isLast?: true) => {
     if (isLast) {
       const techStack = getSessionStorage({ name: FormTypeLabel.techStack });
       const jobs = getSessionStorage({ name: FormTypeLabel.job });
       const { email } = userInfo;
-      updateUser({ email, job: jobs, techStack });
+      updateUser({ email, job: jobs, techStack })
+        .then((res) => {
+          console.log(res, "res");
+          if (res.status === 200) {
+            onResetKeywords();
+          }
+        })
+        .catch((e) => console.log(e, "error"));
       onChangeUserInfo(() => ({ ...INITIAL_USERINFO }));
     }
     setSessionStorage({ name: typeConverter[type], data: selectedList });
-    setSelectedList([]);
   };
 
   useEffect(() => {

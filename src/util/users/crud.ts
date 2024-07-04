@@ -50,7 +50,7 @@ export const updateUser = async ({
       techStack,
     });
 
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error updating user:", error);
     throw error;
