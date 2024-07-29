@@ -15,12 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [21.x]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
@@ -35,7 +34,7 @@ jobs:
 
       # 프로젝트 압축
       - name: Make zip file
-        run: zip -qq -r ./kangbmproject.zip . -x "node_modules/*"
+        run: zip -qq -r ./kangbm.zip . -x "node_modules/*"
         # -qq: quit 모드로 실행 (에러나 경고메세지만 출력하도록 함)
         # -r: 지정된 디렉토리를 재귀적으로 압축 (하위 디렉토리와 파일들 모두 압축)
         # -x "node_modules/*": node_modules 폴더 제외
@@ -50,7 +49,7 @@ jobs:
 
       # 압축된 파일을 S3에 업로드
       - name: Upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./kangbmproject.zip s3://$S3_BUCKET_NAME/kangbmproject.zip
+        run: aws s3 cp --region ap-northeast-2 ./kangbm.zip s3://$S3_BUCKET_NAME/kangbm.zip
 
       # S3에 업로드 된 빌드 파일을 이용해 CodeDeploy가 정의된 동작을 하도록 트리거
       - name: Code Deploy
@@ -59,4 +58,4 @@ jobs:
           --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
-          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=kangbmproject.zip
+          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=kangbm.zip
