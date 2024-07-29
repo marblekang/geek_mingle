@@ -1,4 +1,4 @@
-import ChatRoom from "@/component/chat/ChatRooms/ChatRoom/ChatRoom";
+import ChatRoom from "@/components/chat/ChatRooms/ChatRoom/ChatRoom";
 import React from "react";
 import styles from "./chat-room.module.css";
 interface Params {

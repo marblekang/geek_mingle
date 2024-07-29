@@ -1,4 +1,4 @@
-import Form from "@/component/form/form";
+import Form from "@/components/form/form";
 import { jobKeywords } from "@/ilb/config/selectTag";
 
 const JobForm = () => {

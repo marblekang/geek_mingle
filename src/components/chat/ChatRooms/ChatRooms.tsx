@@ -1,6 +1,6 @@
 "use client";
-import CustomLink from "@/component/common/custom-link/CustomLink";
-import { useAuthToken } from "@/component/customHooks/useAuthToken";
+import CustomLink from "@/components/common/custom-link/CustomLink";
+import { useAuthToken } from "@/components/customHooks/useAuthToken";
 import { useUserInfoStore } from "@/ilb/store/useUserInfoStore";
 import { getRoomsById } from "@/util/room/crud";
 import axios from "axios";

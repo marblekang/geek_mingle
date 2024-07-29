@@ -9,7 +9,7 @@ import React, {
   useState,
 } from "react";
 import styles from "./user-card.module.css";
-import FlexContainer from "@/component/common/flex-container/FlexContainer";
+import FlexContainer from "@/components/common/flex-container/FlexContainer";
 import { faHeart, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReqState, createRoom } from "@/util/room/crud";
@@ -114,8 +114,6 @@ const UserPreference = ({
 }) => {
   const userInfo = useUserCardContext();
   const { userInfo: globalUserInfo } = useUserInfoStore();
-  type PreferenceType = "like" | "hate" | undefined;
-  const [preference, setPreference] = useState<PreferenceType>(undefined);
 
   return (
     <div

@@ -1,4 +1,4 @@
-import Form from "@/component/form/form";
+import Form from "@/components/form/form";
 import { techStackKeywords } from "@/ilb/config/selectTag";
 
 const TechStackForm = () => {

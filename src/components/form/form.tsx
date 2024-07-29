@@ -1,7 +1,7 @@
 "use client";
 import styles from "./form.module.css";
-import SelectTag from "@/component/form/select-tag";
-import useSelectTag from "@/component/form/useSelectTag";
+import SelectTag from "@/components/form/select-tag";
+import useSelectTag from "@/components/form/useSelectTag";
 import { FormType } from "@/ilb/types/form";
 import Link from "next/link";
 import { MouseEvent } from "react";

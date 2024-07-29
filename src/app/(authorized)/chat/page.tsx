@@ -1,9 +1,9 @@
-import ChatCollection from "@/component/chat/ChatCollection";
-import ChatInput from "@/component/chat/ChatInput";
+import ChatCollection from "@/components/chat/ChatCollection";
+import ChatInput from "@/components/chat/ChatInput";
 import styles from "./chat.module.css";
 import { Fragment } from "react";
 import axios from "axios";
-import ChatRooms from "@/component/chat/ChatRooms/ChatRooms";
+import ChatRooms from "@/components/chat/ChatRooms/ChatRooms";
 interface Chat {
   id: string;
   text: string;

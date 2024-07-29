@@ -1,4 +1,4 @@
-import { ServerUserInfo } from "@/ilb/types/users";
+import { ClientUserInfo, ServerUserInfo } from "@/ilb/types/users";
 
 const parseJSON = (data: string | null) => {
   try {
@@ -9,11 +9,11 @@ const parseJSON = (data: string | null) => {
 };
 
 const transformSingleUser = (user: ServerUserInfo) => ({
-  ...user,
+  age: user.age,
+  email: user.email,
+  name: user.name,
   job: parseJSON(user.job),
   techStack: parseJSON(user.techStack),
-  likeUserList: parseJSON(user.likeUserList),
-  hateUserList: parseJSON(user.hateUserList),
 });
 
 export const transformUser = (userData: ServerUserInfo | ServerUserInfo[]) => {

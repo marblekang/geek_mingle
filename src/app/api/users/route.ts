@@ -3,7 +3,14 @@ import { PrismaClient } from "@prisma/client";
 import { transformUser } from "@/util/users/transformUser";
 import { ServerUserInfo } from "@/ilb/types/users";
 const prisma = new PrismaClient();
-
+const calculateSimilarityScore = (
+  preferencesA: number[],
+  preferencesB: number[]
+): number => {
+  return preferencesA.reduce((score, value, index) => {
+    return score + (value === preferencesB[index] ? 1 : 0);
+  }, 0);
+};
 export async function GET(req: NextRequest) {
   try {
     const email = req.nextUrl.searchParams.get("email");
@@ -37,23 +44,27 @@ export async function GET(req: NextRequest) {
         select: {
           likeUserList: true,
           hateUserList: true,
+          preferences: true,
         },
       });
 
       if (!loggedInUser) {
         return new NextResponse("Logged-in user not found", { status: 404 });
       }
-      const { hateUserList, likeUserList } = loggedInUser;
+      const { hateUserList, likeUserList, preferences } = loggedInUser;
 
       const likeUserListArray = likeUserList ? JSON.parse(likeUserList) : [];
       const hateUserListArray = hateUserList ? JSON.parse(hateUserList) : [];
+      const loggedInUserPreferences = preferences
+        ? JSON.parse(preferences)
+        : [];
+
       const excludeEmails = [
         ...likeUserListArray,
         ...hateUserListArray,
         loggedInEmail,
       ];
 
-      console.log(excludeEmails, "excludeEmails");
       // 유저 목록 조회 (페이지네이션) + 특정 이메일 제외
       const users = await prisma.user.findMany({
         where: {
@@ -61,11 +72,41 @@ export async function GET(req: NextRequest) {
             notIn: excludeEmails,
           },
         },
+        select: {
+          age: true,
+          email: true,
+          name: true,
+          job: true,
+          techStack: true,
+          preferences: true,
+        },
         skip: (page - 1) * limit,
         take: limit,
       });
+      const scoredUsers = users.map((user) => {
+        const preferencesArray = user.preferences
+          ? JSON.parse(user.preferences)
+          : [];
+        const similarityScore = calculateSimilarityScore(
+          loggedInUserPreferences,
+          preferencesArray
+        );
+        return {
+          ...user,
+          similarityScore,
+        };
+      });
 
-      return NextResponse.json(transformUser(users), { status: 200 });
+      // 유사도 점수를 기준으로 내림차순 정렬
+      scoredUsers.sort((a, b) => b.similarityScore - a.similarityScore);
+
+      // 페이지네이션 적용
+      const paginatedUsers = scoredUsers.slice(
+        (page - 1) * limit,
+        page * limit
+      );
+      console.log(paginatedUsers, "paginatedUsers");
+      return NextResponse.json(transformUser(paginatedUsers), { status: 200 });
     }
   } catch (error) {
     console.error("Error fetching users:", error);

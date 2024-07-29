@@ -1,37 +1,7 @@
+import { UpdateUserParams, UserInfo } from "@/components/form/useSelectTag";
 import { generateSelectionArray } from "@/ilb/config/selectTag";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
-// export const createUser = async ({
-//   email,
-//   username,
-//   techStack,
-//   jobs,
-// }: {
-//   username: string;
-//   email: string;
-//   techStack: string;
-//   jobs: string;
-// }) => {
-//   try {
-//     const response = await axios.post(
-//       "/api/users",
-//       {
-//         email,
-//         username,
-//         techStack,
-//         jobs,
-//       },
-//       {
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//       }
-//     );
-//     console.log(response.data);
-//   } catch (error) {
-//     console.error("Error:", error);
-//   }
-// };
 /* async function의 반환 값은 Promise
   resolve 한것과 마찬가지임.
 */
@@ -39,25 +9,22 @@ export const updateUser = async ({
   email,
   job,
   techStack,
-}: {
-  email: string;
-  job: string[];
-  techStack: string[];
-}): Promise<any> => {
+}: UpdateUserParams): Promise<UserInfo> => {
   try {
     const selectedKeywords = [...job, ...techStack];
     const preferences = generateSelectionArray(selectedKeywords);
-    const response = await axios.put("/api/users", {
+    const response: AxiosResponse<UserInfo> = await axios.put("/api/users", {
       email,
       job,
       techStack,
       preferences,
     });
-
-    return response;
+    if (response.status !== 200) {
+      throw new Error("Error!");
+    }
+    return response.data;
   } catch (error) {
-    console.error("Error updating user:", error);
-    throw error;
+    throw new Error(`Error updating user:, ${error}`);
   }
 };
 
