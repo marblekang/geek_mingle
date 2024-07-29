@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { NextAuthProvider } from "@/component/auth-provider/NextAuthProvider";
+import { NextAuthProvider } from "@/components/auth-provider/NextAuthProvider";
 import styles from "./page.module.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
-import ReactQueryProviders from "@/component/react-query-provider/ReactQueryProviders";
+import ReactQueryProviders from "@/components/react-query-provider/ReactQueryProviders";
+import ErrorBoundary from "@/components/error-boundary/ErrorBoundary";
 config.autoAddCss = false;
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,10 +25,11 @@ export default function RootLayout({
       <body className={inter.className}>
         <ReactQueryProviders>
           <NextAuthProvider>
-            {/* <Nav /> */}
-            <div className={styles["common-wrapper"]}>
-              <div className={styles["common-container"]}>{children}</div>
-            </div>
+            <ErrorBoundary fallback={<div>Something went wrong.</div>}>
+              <div className={styles["common-wrapper"]}>
+                <div className={styles["common-container"]}>{children}</div>
+              </div>
+            </ErrorBoundary>
           </NextAuthProvider>
         </ReactQueryProviders>
       </body>

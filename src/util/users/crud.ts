@@ -1,36 +1,7 @@
-import axios from "axios";
+import { UpdateUserParams, UserInfo } from "@/components/form/useSelectTag";
+import { generateSelectionArray } from "@/ilb/config/selectTag";
+import axios, { AxiosResponse } from "axios";
 
-// export const createUser = async ({
-//   email,
-//   username,
-//   techStack,
-//   jobs,
-// }: {
-//   username: string;
-//   email: string;
-//   techStack: string;
-//   jobs: string;
-// }) => {
-//   try {
-//     const response = await axios.post(
-//       "/api/users",
-//       {
-//         email,
-//         username,
-//         techStack,
-//         jobs,
-//       },
-//       {
-//         headers: {
-//           "Content-Type": "application/json",
-//         },
-//       }
-//     );
-//     console.log(response.data);
-//   } catch (error) {
-//     console.error("Error:", error);
-//   }
-// };
 /* async function의 반환 값은 Promise
   resolve 한것과 마찬가지임.
 */
@@ -38,22 +9,22 @@ export const updateUser = async ({
   email,
   job,
   techStack,
-}: {
-  email: string;
-  job: string;
-  techStack: string[];
-}): Promise<any> => {
+}: UpdateUserParams): Promise<UserInfo> => {
   try {
-    const response = await axios.put("/api/users", {
+    const selectedKeywords = [...job, ...techStack];
+    const preferences = generateSelectionArray(selectedKeywords);
+    const response: AxiosResponse<UserInfo> = await axios.put("/api/users", {
       email,
       job,
       techStack,
+      preferences,
     });
-
+    if (response.status !== 200) {
+      throw new Error("Error!");
+    }
     return response.data;
   } catch (error) {
-    console.error("Error updating user:", error);
-    throw error;
+    throw new Error(`Error updating user:, ${error}`);
   }
 };
 
@@ -87,4 +58,16 @@ export const getUser = async ({ email }: { email: string }) => {
     console.error("Error fetching user:", error);
     return null;
   }
+};
+
+export const markUser = async ({
+  senderEmail,
+  receiverEmail,
+  type,
+}: {
+  senderEmail: string;
+  receiverEmail: string;
+  type: "like" | "skip";
+}) => {
+  return axios.put("/api/users/mark", { senderEmail, receiverEmail, type });
 };

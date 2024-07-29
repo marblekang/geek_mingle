@@ -5,11 +5,45 @@ import { FormTypeLabel } from "@/ilb/types/enums";
 import { FormType } from "@/ilb/types/form";
 import { INITIAL_USERINFO } from "@/util/initialState";
 import { updateUser } from "@/util/users/crud";
+import { MouseEvent, useCallback, useEffect, useState, useMemo } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios, { AxiosResponse } from "axios";
 
-import { MouseEvent, useCallback, useEffect, useState } from "react";
+export type UserInfo = {
+  email: string;
+  job: string[];
+  techStack: string[];
+};
+
+export type UpdateUserParams = {
+  email: string;
+  job: string[];
+  techStack: string[];
+};
+
+// updateUser 함수가 Promise<AxiosResponse<UserInfo>>를 반환한다고 명시
 const useSelectTag = ({ type }: { type: FormType }) => {
   const { onChangeUserInfo, userInfo } = useUserInfoStore();
   const [selectedList, setSelectedList] = useState<string[]>([]);
+
+  const queryClient = useQueryClient();
+
+  const { mutate: mutateUpdateUser } = useMutation<
+    UserInfo, //return type
+    Error, // Error type
+    UpdateUserParams // mutate 함수에 전달되는 파라미터 타입
+  >({
+    mutationFn: updateUser,
+    onSuccess: (res: UserInfo) => {
+      // console.log(res, "res");
+      onResetKeywords();
+      queryClient.invalidateQueries({ queryKey: ["userInfo"] });
+    },
+    onError: (error: Error) => {
+      console.log(error, "error");
+    },
+  });
+
   const onClickTag = useCallback(
     (e: MouseEvent<HTMLDivElement>) => {
       if (e.target instanceof HTMLElement && e.target.dataset.name) {
@@ -24,6 +58,7 @@ const useSelectTag = ({ type }: { type: FormType }) => {
     },
     [selectedList]
   );
+
   const isIncluded = useCallback(
     (name: string) => {
       return selectedList.includes(name) ? true : false;
@@ -31,18 +66,22 @@ const useSelectTag = ({ type }: { type: FormType }) => {
     [selectedList]
   );
 
-  console.log(selectedList, "selectedList");
+  const typeConverter = useMemo(
+    () => ({
+      job: FormTypeLabel.job,
+      techStack: FormTypeLabel.techStack,
+    }),
+    []
+  );
 
-  const typeConverter: { [key in FormType]: FormTypeLabel } = {
-    job: FormTypeLabel.job,
-    techStack: FormTypeLabel.techStack,
-  };
   interface CommonSessionStorageParams {
     name: string;
   }
+
   interface SetSessionStorageParams extends CommonSessionStorageParams {
     data: any;
   }
+
   const setSessionStorage = ({ name, data }: SetSessionStorageParams) => {
     if (typeof data === "string") {
       sessionStorage.setItem(name, data);
@@ -50,36 +89,49 @@ const useSelectTag = ({ type }: { type: FormType }) => {
     }
     sessionStorage.setItem(name, JSON.stringify(data));
   };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getSessionStorage = ({ name }: CommonSessionStorageParams) => {
-    const item = sessionStorage.getItem(name);
 
-    return item && JSON.parse(item);
+  const getSessionStorage = useCallback(
+    ({ name }: CommonSessionStorageParams) => {
+      const item = sessionStorage.getItem(name);
+      return item ? JSON.parse(item) : null;
+    },
+    []
+  );
+
+  const onResetKeywords = () => {
+    const typeList = [FormTypeLabel.job, FormTypeLabel.techStack];
+    typeList.forEach((type) => {
+      setSessionStorage({ name: type, data: [] });
+    });
   };
 
   const onClickSubmit = (type: FormType, isLast?: true) => {
     if (isLast) {
-      /* DB에 저장. 
-    Post 요청
-    */
-
-      const techStack = getSessionStorage({ name: FormTypeLabel.techStack });
-      const jobs = getSessionStorage({ name: FormTypeLabel.job });
+      const techStack =
+        getSessionStorage({ name: FormTypeLabel.techStack }) || [];
+      const jobs =
+        getSessionStorage({ name: FormTypeLabel.job })?.length === 0
+          ? selectedList
+          : getSessionStorage({ name: FormTypeLabel.job }) || [];
       const { email } = userInfo;
-      updateUser({ email, job: jobs, techStack });
+
+      mutateUpdateUser({ email, job: jobs, techStack });
+
       onChangeUserInfo(() => ({ ...INITIAL_USERINFO }));
     }
     setSessionStorage({ name: typeConverter[type], data: selectedList });
   };
+
   useEffect(() => {
     const data = getSessionStorage({ name: typeConverter[type] });
     setSelectedList(data ?? []);
-  }, [type, getSessionStorage, typeConverter]);
+  }, [type, typeConverter, getSessionStorage]);
 
   return {
     onClickTag,
     isIncluded,
     onClickSubmit,
+    selectedList,
   };
 };
 

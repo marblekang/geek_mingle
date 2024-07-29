@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { NextPage } from "next";
-import { useAuthToken } from "@/component/customHooks/useAuthToken";
+import { useAuthToken } from "@/components/customHooks/useAuthToken";
 
 const NotFound: NextPage = () => {
   const { token } = useAuthToken();

@@ -9,11 +9,13 @@ import React, {
   useState,
 } from "react";
 import styles from "./user-card.module.css";
-import FlexContainer from "@/component/common/flex-container/FlexContainer";
+import FlexContainer from "@/components/common/flex-container/FlexContainer";
 import { faHeart, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ReqState, createRoom } from "@/util/room/crud";
 import { useUserInfoStore } from "@/ilb/store/useUserInfoStore";
+import { markUser } from "@/util/users/crud";
+import { NextResponse } from "next/server";
 interface IUserInfo {
   avatar: StaticImageData /* 임시로 작성, s3에서 주소 가져오도록 수정해야함.. */;
   name: string;
@@ -71,7 +73,9 @@ interface UserInfoProps {
 
 const handleCreateRoom = async (senderEmail: string, receiverEmail: string) => {
   const result: ReqState = await createRoom(senderEmail, receiverEmail);
-  console.log(result);
+  if (result.status === 200) {
+    alert("Matching!");
+  }
 };
 
 const UserInfo = ({ type }: UserInfoProps) => {
@@ -103,11 +107,13 @@ const UserEssentialInfoArea = ({ children }: UserCardChildren) => {
   return <div className={styles["user-essential-info-area"]}>{children}</div>;
 };
 
-const UserPreference = () => {
+const UserPreference = ({
+  excludeUser,
+}: {
+  excludeUser: ({ email }: { email: string }) => void;
+}) => {
   const userInfo = useUserCardContext();
   const { userInfo: globalUserInfo } = useUserInfoStore();
-  type PreferenceType = "like" | "hate" | undefined;
-  const [preference, setPreference] = useState<PreferenceType>(undefined);
 
   return (
     <div
@@ -122,10 +128,39 @@ const UserPreference = () => {
       <FontAwesomeIcon
         icon={faHeart}
         onClick={() => {
-          handleCreateRoom(globalUserInfo.email, userInfo.email);
+          markUser({
+            senderEmail: globalUserInfo.email,
+            receiverEmail: userInfo.email,
+            type: "like",
+          })
+            .then((res) => {
+              if (res.status === 200) {
+                excludeUser({ email: userInfo.email });
+                handleCreateRoom(globalUserInfo.email, userInfo.email);
+              }
+            })
+            .catch((e) => {
+              console.log(e);
+            });
         }}
       />
-      <FontAwesomeIcon icon={faX} />
+
+      <FontAwesomeIcon
+        icon={faX}
+        onClick={() => {
+          markUser({
+            senderEmail: globalUserInfo.email,
+            receiverEmail: userInfo.email,
+            type: "skip",
+          })
+            .then((res) => {
+              if (res.status !== 200) {
+                excludeUser({ email: userInfo.email });
+              }
+            })
+            .catch((e) => console.log(e));
+        }}
+      />
     </div>
   );
 };

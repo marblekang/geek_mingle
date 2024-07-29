@@ -49,6 +49,7 @@ const Register = () => {
         return state;
     }
   };
+
   const [state, dispatch] = useReducer(reducer, initialState);
   const router = useRouter();
   const { onChangeUserInfo } = useUserInfoStore();
@@ -162,12 +163,16 @@ const Register = () => {
           <input
             type="number"
             id="age"
-            value={state.age === 0 ? undefined : state.age}
+            value={state.age === 0 ? "" : state.age}
             onChange={handleChange}
             required
           />
         </div>
-        {state.error && <p className={styles.error}>{state.error}</p>}
+        {state.error && (
+          <p className={styles.error} id="error-message">
+            {state.error}
+          </p>
+        )}
         <button type="submit" className={styles.submitButton}>
           Register
         </button>

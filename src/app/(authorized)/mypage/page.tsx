@@ -1,5 +1,5 @@
 "use client";
-import { useAuthToken } from "@/component/customHooks/useAuthToken";
+import { useAuthToken } from "@/components/customHooks/useAuthToken";
 import { useUserInfoStore } from "@/ilb/store/useUserInfoStore";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";

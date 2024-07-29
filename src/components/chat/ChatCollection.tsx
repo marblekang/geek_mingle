@@ -1,12 +1,19 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
-import { collection, onSnapshot, query, orderBy } from "@firebase/firestore";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import {
+  collection,
+  onSnapshot,
+  query,
+  orderBy,
+  where,
+} from "@firebase/firestore";
 import db from "@/fire-config";
 import styles from "./chat.module.css";
 import dayjs from "dayjs";
 import axios from "axios";
 import { useUserInfoStore } from "@/ilb/store/useUserInfoStore";
 import { useAuthToken } from "../customHooks/useAuthToken";
+import { getRoomsById } from "@/util/room/crud";
 /**
  * @description
  * 채팅 목록 컴포넌트
@@ -21,8 +28,9 @@ const ChatCollection = () => {
   }
   // 채팅 목록 데이터
   const [chatData, setChatData] = useState<ChatInfo[]>([]);
+
   const messageRef = useRef<HTMLDivElement | null>(null);
-  const { removeToken } = useAuthToken();
+
   //
   /**
    * @description
@@ -31,33 +39,7 @@ const ChatCollection = () => {
    * @param cb setState로 data를 설정해주기위한 함수 인자
    * @return unsubscribe 실시간 파이어베이스 연결 함수
    */
-  const { userInfo } = useUserInfoStore();
-  const getRoomIds = async () => {
-    try {
-      const response = await axios.get("/api/room/chat", {
-        params: { userEmail: userInfo.email },
-      });
-      return response.data;
-    } catch (e) {
-      console.log(e);
-      removeToken();
-      return [];
-    }
-  };
 
-  function getChatList(cb: (data: ChatInfo[]) => void) {
-    const q = query(collection(db, "chat"), orderBy("createdAt", "asc"));
-    console.log(q, "qqqqqqqqqqqqqqqqqqqqqq");
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const responseData: ChatInfo[] = querySnapshot.docs.map((doc) => ({
-        ...(doc.data() as ChatInfo),
-        id: doc.id,
-      }));
-      cb(responseData as ChatInfo[]);
-    });
-
-    return unsubscribe;
-  }
   interface Timestamp {
     seconds: number;
     nanoseconds: number;
@@ -75,15 +57,7 @@ const ChatCollection = () => {
     return date.format("YYYY-MM-DD HH:mm:ss");
   }
 
-  // 마운트될 때, 실시간 파이어베이스 스트어와 연결해주며 조회하도록 해주고 페이지가 사라질 때 해지하도록 설정해줍니다.
-  useEffect(() => {
-    const unsubscribe = getChatList((data) => setChatData(data));
-    return () => {
-      unsubscribe();
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+  console.log(chatData, "chatDat");
   /* 스크롤로 데이터 추가된건지, 메시지 입력해서 데이터 추가된건지 구분하는 로직 필요함. */
 
   useEffect(() => {

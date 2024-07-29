@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import NavBottom from "@/component/nav-bottom/NavBottom";
+import NavBottom from "@/components/nav-bottom/NavBottom";
 import styles from "./page.module.css";
 interface AuthorizedLayoutProps {
   children: ReactNode;

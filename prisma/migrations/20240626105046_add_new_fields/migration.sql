@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `Room` ADD COLUMN `hateUserList` VARCHAR(191) NOT NULL DEFAULT '',
+    ADD COLUMN `likeUserList` VARCHAR(191) NOT NULL DEFAULT '';

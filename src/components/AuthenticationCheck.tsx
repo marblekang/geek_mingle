@@ -8,7 +8,7 @@ import { useUserInfoStore } from "@/ilb/store/useUserInfoStore";
 const AuthenticationCheck = () => {
   const { token } = useAuthToken();
   const { userInfo } = useUserInfoStore();
-  console.log(userInfo, "userInfo");
+
   const router = useRouter();
   useEffect(() => {
     if (token) {

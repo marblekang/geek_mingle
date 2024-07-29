@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "cypress": "npx cypress open"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
@@ -21,6 +22,7 @@
     "age-picker": "^1.2.0",
     "axios": "^1.7.1",
     "bcrypt": "^5.1.1",
+    "cypress": "^13.13.1",
     "dayjs": "^1.11.11",
     "firebase": "^10.12.2",
     "jsonwebtoken": "^9.0.2",

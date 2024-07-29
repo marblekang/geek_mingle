@@ -1,9 +1,10 @@
 "use client";
 import styles from "./form.module.css";
-import SelectTag from "@/component/form/select-tag";
-import useSelectTag from "@/component/form/useSelectTag";
+import SelectTag from "@/components/form/select-tag";
+import useSelectTag from "@/components/form/useSelectTag";
 import { FormType } from "@/ilb/types/form";
 import Link from "next/link";
+import { MouseEvent } from "react";
 
 interface Props {
   title: string;
@@ -14,7 +15,21 @@ interface Props {
   isLast?: true;
 }
 const Form = ({ title, keywords, nextPath, prevPath, isLast, type }: Props) => {
-  const { isIncluded, onClickTag, onClickSubmit } = useSelectTag({ type });
+  const { isIncluded, onClickTag, onClickSubmit, selectedList } = useSelectTag({
+    type,
+  });
+  const handleClick = (
+    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
+    type: FormType,
+    isLast?: true
+  ) => {
+    if (selectedList.length === 0) {
+      e.preventDefault();
+      alert("최소 1개 이상의 항목을 선택해주세요.");
+    } else {
+      isLast ? onClickSubmit(type, true) : onClickSubmit(type);
+    }
+  };
 
   return (
     <>
@@ -45,9 +60,7 @@ const Form = ({ title, keywords, nextPath, prevPath, isLast, type }: Props) => {
             <Link href={nextPath ? nextPath : ""}>
               <button
                 className={styles["common-button"]}
-                onClick={() => {
-                  onClickSubmit(type);
-                }}
+                onClick={(e) => handleClick(e, type)}
               >
                 다음
               </button>
@@ -57,9 +70,7 @@ const Form = ({ title, keywords, nextPath, prevPath, isLast, type }: Props) => {
             <Link href={"/"}>
               <button
                 className={styles["common-button"]}
-                onClick={() => {
-                  onClickSubmit(type, true);
-                }}
+                onClick={(e) => handleClick(e, type, true)}
               >
                 제출
               </button>

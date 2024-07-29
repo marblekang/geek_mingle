@@ -2,7 +2,7 @@
 import { useReducer, FormEvent, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./sign-in.module.css";
-import { useAuthToken } from "@/component/customHooks/useAuthToken";
+import { useAuthToken } from "@/components/customHooks/useAuthToken";
 import { useUserInfoStore } from "@/ilb/store/useUserInfoStore";
 import { getUser } from "@/util/users/crud";
 
