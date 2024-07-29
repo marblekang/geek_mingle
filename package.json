@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "cypress": "npx cypress open"
+    "cypress": "npx cypress open",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
