@@ -3,10 +3,10 @@ os: linux
 
 files:
   - source: /
-    destination: /home/ec2-user/app
+    destination: /home/ubuntu/kangbm
     overwrite: yes
 permissions:
-  - object: /home/ec2-user/app
+  - object: /home/ubuntu/kangbm
     owner: ubuntu
     group: ubuntu
     mode: 755
